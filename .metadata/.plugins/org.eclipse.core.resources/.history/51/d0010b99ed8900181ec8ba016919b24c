@@ -1,0 +1,5 @@
+package ic.ac.uk.xdrone.web
+
+class XDroneResourceHandler {
+	
+}
