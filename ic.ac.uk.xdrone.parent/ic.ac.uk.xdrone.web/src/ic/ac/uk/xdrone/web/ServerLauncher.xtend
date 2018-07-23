@@ -19,7 +19,7 @@ import java.net.InetAddress
  */
 class ServerLauncher {
 	def static void main(String[] args) {
-		val server = new Server(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress, 8080))
+		val server = new Server(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), 8080))
 		server.handler = new WebAppContext => [
 			resourceBase = 'WebRoot'
 			welcomeFiles = #["index.html"]
