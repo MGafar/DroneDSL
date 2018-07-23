@@ -11,15 +11,37 @@ import org.eclipse.jetty.webapp.MetaInfConfiguration
 import org.eclipse.jetty.webapp.WebAppContext
 import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
+import java.net.Inet4Address
+import java.net.NetworkInterface
 import java.net.InetAddress
+import java.net.SocketException
+import java.net.UnknownHostException
+import java.util.Enumeration
 
-/**
- * This program starts an HTTP server for testing the web integration of your DSL.
- * Just execute it and point a web browser to http://localhost:8080/
- */
 class ServerLauncher {
+	
+	def static InetAddress getIPv4InetAddress() throws SocketException, UnknownHostException{
+		
+		val ni = NetworkInterface.getByName("wlan0");
+		
+//		val ni = NetworkInterface.getByName("wlp3s0");
+		
+		val ias = ni.getInetAddresses();
+		
+		var iaddress = ias.nextElement();
+		
+		while(!(iaddress instanceof Inet4Address))
+		{
+			iaddress = ias.nextElement();
+		}
+		
+		return iaddress;
+	}
+
 	def static void main(String[] args) {
-		val server = new Server(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), 8080))
+			
+		val server = new Server(new InetSocketAddress(getIPv4InetAddress(), 8080))
+		
 		server.handler = new WebAppContext => [
 			resourceBase = 'WebRoot'
 			welcomeFiles = #["index.html"]
@@ -37,6 +59,7 @@ class ServerLauncher {
 		try {
 			server.start
 			log.info('Server started ' + server.getURI + '...')
+			log.info(Inet4Address.getLocalHost().getHostAddress())
 			new Thread[
 				log.info('Press enter to stop the server...')
 				val key = System.in.read
