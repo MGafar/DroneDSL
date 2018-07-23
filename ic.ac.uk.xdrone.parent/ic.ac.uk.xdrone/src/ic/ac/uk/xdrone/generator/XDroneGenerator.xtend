@@ -102,8 +102,8 @@ class XDroneGenerator extends AbstractGenerator {
 		var result = "";
 		for(main : resource.allContents.toIterable.filter(Main)) {
 			result = main.compile.toString; 
-//			fsa.generateFile('result.js', result)
-//			fsa.generateFile('/DEFAULT_ARTIFACT', result)
+			fsa.generateFile('result.js', result)
+			fsa.generateFile('/DEFAULT_ARTIFACT', result)
 		}
 		var main = null;
 		if (resource.allContents

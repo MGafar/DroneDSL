@@ -11,6 +11,7 @@ import org.eclipse.jetty.webapp.MetaInfConfiguration
 import org.eclipse.jetty.webapp.WebAppContext
 import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
+import java.net.InetAddress
 
 /**
  * This program starts an HTTP server for testing the web integration of your DSL.
@@ -18,7 +19,7 @@ import org.eclipse.jetty.webapp.WebXmlConfiguration
  */
 class ServerLauncher {
 	def static void main(String[] args) {
-		val server = new Server(new InetSocketAddress('localhost', 8080))
+		val server = new Server(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress, 8080))
 		server.handler = new WebAppContext => [
 			resourceBase = 'WebRoot'
 			welcomeFiles = #["index.html"]
