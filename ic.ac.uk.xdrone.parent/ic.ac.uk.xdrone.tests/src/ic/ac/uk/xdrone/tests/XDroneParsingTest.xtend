@@ -18,15 +18,15 @@ class XDroneParsingTest {
 	@Inject
 	ParseHelper<Program> parseHelper
 	
-	@Test
-	def void loadModel() {
-		val result = parseHelper.parse('''
-			xdrone Test
-			begin
-			end
-		''')
-		Assert.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
-	}
+//	@Test
+//	def void loadModel() {
+//		val result = parseHelper.parse('''
+//			xdrone Test
+//			begin
+//			end
+//		''')
+//		Assert.assertNotNull(result)
+//		val errors = result.eResource.errors
+//		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+//	}
 }
