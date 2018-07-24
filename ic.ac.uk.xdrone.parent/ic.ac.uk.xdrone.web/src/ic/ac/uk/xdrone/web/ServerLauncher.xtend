@@ -16,7 +16,6 @@ import java.net.NetworkInterface
 import java.net.InetAddress
 import java.net.SocketException
 import java.net.UnknownHostException
-import java.util.Enumeration
 
 class ServerLauncher {
 	
@@ -26,8 +25,16 @@ class ServerLauncher {
 		
 //		val ni = NetworkInterface.getByName("wlp3s0");
 		
-		val ias = ni.getInetAddresses();
+		try{
+			ni.getInetAddresses();
+		} catch (Exception e)
+		{
+			println("Unable to find NIC");
+			println("Running on localhost");
+			return InetAddress.getLocalHost();
+		}
 		
+		val ias = ni.getInetAddresses();
 		var iaddress = ias.nextElement();
 		
 		while(!(iaddress instanceof Inet4Address))
@@ -35,12 +42,14 @@ class ServerLauncher {
 			iaddress = ias.nextElement();
 		}
 		
+		println("Reaches here");
+		
 		return iaddress;
 	}
 
 	def static void main(String[] args) {
 			
-		val server = new Server(new InetSocketAddress(getIPv4InetAddress(), 8080))
+		val server = new Server(new InetSocketAddress(getIPv4InetAddress(), 8081))
 		
 		server.handler = new WebAppContext => [
 			resourceBase = 'WebRoot'

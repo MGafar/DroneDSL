@@ -21,7 +21,9 @@ class XDroneParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			Hello Xtext!
+			xdrone Test
+			begin
+			end
 		''')
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors
