@@ -5,7 +5,9 @@
 	<title>Example Web Editor</title>
 	<link rel="stylesheet" type="text/css" href="xtext/2.14.0/xtext-ace.css"/>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<link rel="stylesheet" type="text/css" href="css/lightbox.css"/>
 	<script src="webjars/requirejs/2.3.2/require.min.js"></script>
+	<script src="webjars/jquery/2.2.4/jquery.min.js"></script>
 	<script type="text/javascript">
 		var baseUrl = window.location.pathname;
 		var fileIndex = baseUrl.indexOf("index.html");
@@ -14,7 +16,6 @@
 		require.config({
 			baseUrl: baseUrl,
 			paths: {
-				"jquery": "webjars/jquery/2.2.4/jquery.min",
 				"ace/ext/language_tools": "webjars/ace/1.2.3/src/ext-language_tools",
 				"xtext/xtext-ace": "xtext/2.14.0/xtext-ace"
 			}
@@ -29,37 +30,52 @@
 					syntaxDefinition: "xtext-resources/generated/mode-xDrone"
 				});
 				
- 					jQuery('#generate-button').bind("click", function(e)
+ 					$('#generate-button').bind("click", function(e)
 					{
 						var data = 
 						{
-							/* resource : editor.xtextServices.options.resourceId, */
+							resource : editor.xtextServices.options.resourceId, 
 							fullText : editor.getValue()
 						};	
 						console.log(data);	
-						jQuery.post(baseUrl+'xtext-service/compile?resource='+editor.xtextServices.options.resourceId, data, function(result){
+						$.post(baseUrl+'xtext-service/compile?resource='+editor.xtextServices.options.resourceId, data, function(result){
 							console.log("resource generated");
 						});
 						
-						jQuery('#generated-code').html('<iframe src="http://' + location.host + '/xtext-service/generate?resource=user_code.xDrone" width=99% height=96%></iframe>');
+						$('#generated-code').html('<iframe src="http://' + location.host + '/xtext-service/generate?resource=user_code.xDrone" width=99% height=96%></iframe>');
 						e.preventDefault();
+						
 					});
  					
- 					jQuery('#deploy-button').bind("click", function(e){
+ 					$('#deploy-button').bind("click", function(e){
  						var data = {
  							resource : editor.xtextServices.options.resourceId,
  							fullText : editor.getValue()
  						};	
  						console.log(data);	
- 						jQuery.post(baseUrl+'xtext-service/save?resource='+editor.xtextServices.options.resourceId, data, function(result){
+ 						$.post(baseUrl+'xtext-service/save?resource='+editor.xtextServices.options.resourceId, data, function(result){
  							console.log("saved resource");
  						}); 				
- 						jQuery.post(baseUrl+'xtext-service/deploy?resource='+editor.xtextServices.options.resourceId, data, function(result){
+ 						$.post(baseUrl+'xtext-service/deploy?resource='+editor.xtextServices.options.resourceId, data, function(result){
  							console.log("deploying resource");
  						}); 
  						e.preventDefault();
  					});
-				
+ 					
+ 					
+/*  					GalleryGenerator = function(){
+ 						var data = {
+ 	 							resource : editor.xtextServices.options.resourceId,
+ 	 							fullText : editor.getValue()
+ 	 						};
+ 						
+ 						setInterval(function(){	
+ 	 	 					$.post(baseUrl+'xtext-service/dynamic-gallery?resource='+editor.xtextServices.options.resourceId, data, function(result){
+ 	 	 					});	
+ 	 					}, 1000);
+ 					};
+ 				
+ 					GalleryGenerator(); */
 			});
 		});
 	</script>
@@ -67,20 +83,61 @@
 <body>
 
 <div class="container">
+	
 	<div class="header">
 		<h1>Example XDrones Web Editor</h1>
 	</div>
+	
 	<div class="content">
 		<div id="xtext-editor" data-editor-xtext-lang="xDrone" data-editor-resource-id="user_code.xDrone"></div>
 	</div>
+	
 	<div class="button-wrapper">
 		<button id="generate-button" value="Generate" title="Generate">Generate</button>
 		<button id="deploy-button" value="Deploy" title="Deploy">Deploy</button>
 		<div id="generated-code">
 		</div>
 	</div>
+	
+	<div class="gallery" id="gallery">
+	</div>
+	
 </div>
+
+<script>
+
+	$("#gallery").load("html/lightbox.html", function(){
+		
+		$.getScript("js/lightbox.js", function(){});
+	});
+	
+	setInterval(function(){
+		if(document.getElementById('myModal').style.display != "block"){
+			ifHasChanged("html/lightbox.html", function(nModif, nVisit){
+				$("#gallery").load("html/lightbox.html");
+			});	
+		}
+	}, 5000);
+	
+	function getHeaderTime () {
+		  var nLastVisit = parseFloat(window.localStorage.getItem('lm_' + this.filepath));
+		  var nLastModif = Date.parse(this.getResponseHeader("Last-Modified"));
+
+		  if (isNaN(nLastVisit) || nLastModif > nLastVisit) {
+		    window.localStorage.setItem('lm_' + this.filepath, Date.now());
+		    isFinite(nLastVisit) && this.callback(nLastModif, nLastVisit);
+		  }
+		};
+
+	function ifHasChanged(sURL, fCallback) {
+	  var oReq = new XMLHttpRequest();
+	  oReq.open("HEAD" /* use HEAD - we only need the headers! */, sURL);
+	  oReq.callback = fCallback;
+	  oReq.filepath = sURL;
+	  oReq.onload = getHeaderTime;
+	  oReq.send();
+	}
+</script>
 
 </body>
 </html>
-

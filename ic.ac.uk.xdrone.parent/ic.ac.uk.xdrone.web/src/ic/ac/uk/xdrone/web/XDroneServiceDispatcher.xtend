@@ -14,6 +14,8 @@ import org.eclipse.xtext.web.server.XtextServiceDispatcher
 import org.eclipse.xtext.web.server.persistence.IResourceBaseProvider
 import org.eclipse.xtext.web.server.model.DocumentStateResult
 import org.eclipse.xtext.web.server.generator.GeneratorService
+import java.io.PrintWriter
+import java.util.ArrayList
 
 class XDroneServiceDispatcher extends XtextServiceDispatcher {
 
@@ -30,18 +32,20 @@ class XDroneServiceDispatcher extends XtextServiceDispatcher {
             	getCompileService(context)
             case 'emergencystop':
             	getStopService(context)
+//            case 'dynamic-gallery':
+//            	getDynamicGallery(context)
             default:
                 super.createServiceDescriptor(serviceType, context)
         }
     }
-    
+	
+ 
 	
 	protected def getCompileService(IServiceContext context) throws InvalidRequestException {
 		val resourceId = context.getParameter('resource')
 		if (resourceId === null)
 			throw new InvalidRequestException('The parameter \'resource\' is required.')
 		
-		println("Here")
 		val document = getDocumentAccess(context)
 		println(document)
 		new ServiceDescriptor => [
@@ -139,5 +143,78 @@ class XDroneServiceDispatcher extends XtextServiceDispatcher {
 		]
 
 	}
+	
+//	protected def getDynamicGallery(IServiceContext context) throws InvalidRequestException {
+//		val resourceId = context.getParameter('resource')
+//		if (resourceId === null)
+//			throw new InvalidRequestException('The parameter \'resource\' is required.')
+//		
+//		new ServiceDescriptor => [
+//			service = [
+//				var PrintWriter writer
+//				try {
+//					val document = getResourceDocument(resourceId, context);
+//					var i = 1;
+//
+//					writer = new PrintWriter("WebRoot/html/lightbox.html", "UTF-8");
+//					var File[] files = new File("WebRoot/images").listFiles();
+//					
+//					writer.println("<div class=\"row\">");
+//					for (File file : files) {
+//					    if (file.isFile()) {
+//					    	writer.println("   <div class=\"column\">");
+//					    	writer.println("      <img src=\"images/" + file.getName() + "\" style=\"width:100%\" onclick=\"openModal();currentSlide(" + i + ")\" class=\"hover-shadow cursor\">");
+//					    	writer.println("   </div>");
+//					    	i++;
+//					    }
+//					}
+//					writer.println("</div>");
+//					
+//					writer.println("<div id=\"myModal\" class=\"modal\">");
+//					writer.println("  <span class=\"close cursor\" onclick=\"closeModal()\">&times;</span>");
+//					writer.println("  <div class=\"modal-content\">");
+//				
+//					var number_of_images = i-1;
+//					i = 1;
+//					for (File file : files) {
+//					    if (file.isFile()) {
+//							writer.println("    <div class=\"mySlides\">");
+//							writer.println("      <div class=\"numbertext\">" + i + " / " + number_of_images + "</div>");
+//							writer.println("      <img src=\"images/" + file.getName() + "\" style=\"width:100%\">");
+//							writer.println("    </div>");
+//					    	i++;
+//					    }
+//					}
+//					
+//					writer.println("	<a class=\"prev\" onclick=\"plusSlides(-1)\">&#10094;</a>");
+//					writer.println("    <a class=\"next\" onclick=\"plusSlides(1)\">&#10095;</a>");
+//					writer.println("    <div class=\"caption-container\">");
+//					writer.println("      <p id=\"caption\"></p>");
+//					writer.println("    </div>");					
+//				
+//					i = 1;
+//					for (File file : files) {
+//					    if (file.isFile()) {
+//							writer.println("	<div class=\"column\">");
+//							writer.println("      <img class=\"demo cursor\" src=\"images/" + file.getName() + "\" style=\"width:100%\" onclick=\"currentSlide("+ i +")\" alt=\"" + file.getName() + "\">");
+//							writer.println("    </div>");
+//					    	i++;
+//					    }
+//					}
+//				
+//					writer.println("   </div>");
+//					writer.println("</div>");
+//				
+//					writer.close();
+//					
+//					return new DocumentStateResult(document.stateId);
+//											
+//				} catch (Throwable throwable) {
+//					handleError(throwable)
+//				}
+//			]
+//			hasSideEffects = true
+//		]
+//	}
 
 }
