@@ -28,13 +28,16 @@ Command:
 	| RotateL
 	| RotateR
 	| Wait
+	| Snapshot
 ;
-
 
 Takeoff: 'TAKEOFF';
 Land : 'LAND';
- 
 
+ 
+Snapshot:
+	'SNAPSHOT' '('image_name = ID')'
+;
 Up: 
 	'UP' '('milliseconds = INT')'
 ;
@@ -62,3 +65,4 @@ RotateR:
 Wait:
 	'WAIT' '(' milliseconds = INT ')'
 ;
+

@@ -21,6 +21,7 @@ import java.io.File
 import java.io.PrintWriter
 import java.util.concurrent.TimeUnit
 import java.util.Arrays
+import java.util.Comparator
 
 class ServerLauncher {
 	
@@ -73,7 +74,15 @@ class ServerLauncher {
 
 					var File[] files = new File("WebRoot/images").listFiles();
 					
-					Arrays.sort(files)
+					//Sort fetched images by last modified
+					Arrays.sort(files, new Comparator<File>(){
+						override compare(File arg0, File arg1) {
+							return Long.valueOf(arg0.lastModified()).compareTo(arg1.lastModified());
+						}	
+					})
+					
+					//Show latest image first
+					files.reverse();
 					
 					//Checks if there's file changes in directory
 					//If it's the same a new HTML Document isn't created

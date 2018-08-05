@@ -14,7 +14,6 @@ import org.eclipse.xtext.web.server.XtextServiceDispatcher
 /**
  * Use this class to register additional components to be used within the web application.
  */
-@FinalFieldsConstructor
 class XDroneWebModule extends AbstractXDroneWebModule {
 	
 		def Class<? extends IServerResourceHandler> bindIServerResourceHandler()  {

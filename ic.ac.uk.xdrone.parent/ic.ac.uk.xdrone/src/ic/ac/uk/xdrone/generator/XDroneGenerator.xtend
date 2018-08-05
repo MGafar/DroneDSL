@@ -17,8 +17,7 @@ import ic.ac.uk.xdrone.xDrone.Backward
 import ic.ac.uk.xdrone.xDrone.RotateL
 import ic.ac.uk.xdrone.xDrone.RotateR
 import ic.ac.uk.xdrone.xDrone.Wait
-
-
+import ic.ac.uk.xdrone.xDrone.Snapshot
 
 /**
  * Generates code from your model files on save.
@@ -29,8 +28,23 @@ class XDroneGenerator extends AbstractGenerator {
 
 	def compile(Main main)'''
 		var arDrone = require('/usr/local/lib/node_modules/ar-drone'); 
+		var http    = require('http');
+		var fs		= require('fs');
+		
 		var client  = arDrone.createClient();
+		
+		console.log('Connecting png stream ...');
+		var pngStream = arDrone.createClient().getPngStream();
+		
 		client.takeoff();
+		
+		var lastPng;
+		pngStream
+		  .on('error', console.log)
+		  .on('data', function(pngBuffer) {
+		    lastPng = pngBuffer;
+		  });
+		  
 		client
 		  .after(5000, function() {
 		«FOR f : main.commands» 
@@ -43,6 +57,9 @@ class XDroneGenerator extends AbstractGenerator {
 		  });
 	'''
 	def compile(Command cmd) '''
+		«IF cmd instanceof Snapshot »
+	    	fs.writeFile('WebRoot/images/«cmd.image_name».png', lastPng, (err) => {});
+	  	«ENDIF»
 		«IF cmd instanceof Up »
 		    this.stop();
 		    this.up(0.2);
@@ -105,14 +122,14 @@ class XDroneGenerator extends AbstractGenerator {
 			fsa.generateFile('result.js', result)
 			fsa.generateFile('/DEFAULT_ARTIFACT', result)
 		}
-		var main = null;
-		if (resource.allContents
-				.filter(typeof(Main)) != null) {
-					////main = resource.allContents.toIterable.filter(typeof(Main))
-				}
+//		var main = null;
+//		if (resource.allContents
+//				.filter(typeof(Main)) !== null) {
+//					////main = resource.allContents.toIterable.filter(typeof(Main))
+//				}
 		
 		try {
-		    var writer = new PrintWriter("/tmp/result.js", "UTF-8");
+		    var writer = new PrintWriter("WebRoot/result.js", "UTF-8");
 		    writer.println(result);
 		    writer.close();
 		} catch (IOException e) {

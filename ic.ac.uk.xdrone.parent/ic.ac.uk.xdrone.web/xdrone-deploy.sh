@@ -1,5 +1,5 @@
 #!/bin/bash
 
-node /tmp/result.js
+node WebRoot/result.js
 
 killall node

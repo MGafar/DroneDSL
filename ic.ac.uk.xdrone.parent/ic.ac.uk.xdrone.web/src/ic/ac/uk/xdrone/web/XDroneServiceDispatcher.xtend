@@ -6,23 +6,19 @@ package ic.ac.uk.xdrone.web
 import com.google.inject.Inject
 import java.io.File
 import java.io.FileWriter
-import java.io.IOException
-import java.util.Map
 import org.eclipse.xtext.web.server.IServiceContext
 import org.eclipse.xtext.web.server.InvalidRequestException
 import org.eclipse.xtext.web.server.XtextServiceDispatcher
 import org.eclipse.xtext.web.server.persistence.IResourceBaseProvider
 import org.eclipse.xtext.web.server.model.DocumentStateResult
 import org.eclipse.xtext.web.server.generator.GeneratorService
-import java.io.PrintWriter
-import java.util.ArrayList
 
 class XDroneServiceDispatcher extends XtextServiceDispatcher {
 
     @Inject IResourceBaseProvider resourceBaseProvider
     
     @Inject
-    private GeneratorService generatorService;
+    GeneratorService generatorService;
 
     override protected createServiceDescriptor(String serviceType, IServiceContext context) {
         switch serviceType {
@@ -122,7 +118,7 @@ class XDroneServiceDispatcher extends XtextServiceDispatcher {
 						}
 						val document = getResourceDocument(resourceId, context)
 						
-						println("preparing to run command: /bin/bash -c /xdrone/xdrone-deploy.sh "+file.getAbsolutePath()+" > /tmp/xdrone.log")
+						println("preparing to run command: /bin/bash -c /xdrone-deploy.sh "+file.getAbsolutePath()+" > /tmp/xdrone.log")
 						
 						val pb = new ProcessBuilder().inheritIO()
 						.command("/bin/bash", "-c", System.getProperty("user.dir") + "/xdrone-deploy.sh" + " > /tmp/xdrone.log").start();
