@@ -111,14 +111,19 @@
 		$.getScript("js/lightbox.js", function(){});
 	});
 	
-	setInterval(function(){
+	
+	
+	function gallery_poll(){
 		if(document.getElementById('myModal').style.display != "block"){
 			ifHasChanged("html/lightbox.html", function(nModif, nVisit){
 				$("#gallery").load("html/lightbox.html");
 			});	
 		}
-	}, 5000);
+	};
 	
+	var gallery_refresh = setInterval(gallery_poll, 5000);
+	
+	/* Reference this code - NOT MINE DON'T FORGET - */
 	function getHeaderTime () {
 		  var nLastVisit = parseFloat(window.localStorage.getItem('lm_' + this.filepath));
 		  var nLastModif = Date.parse(this.getResponseHeader("Last-Modified"));
@@ -131,7 +136,12 @@
 
 	function ifHasChanged(sURL, fCallback) {
 	  var oReq = new XMLHttpRequest();
-	  oReq.open("HEAD" /* use HEAD - we only need the headers! */, sURL);
+	  
+/*  	  if(oReq.status != 200) {
+	  	clearInterval(gallery_refresh); 	  	
+ 	  }  */
+	  
+	  oReq.open("HEAD", sURL);
 	  oReq.callback = fCallback;
 	  oReq.filepath = sURL;
 	  oReq.onload = getHeaderTime;
