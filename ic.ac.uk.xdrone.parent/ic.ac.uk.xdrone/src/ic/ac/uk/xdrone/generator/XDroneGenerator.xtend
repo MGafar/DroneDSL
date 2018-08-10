@@ -31,10 +31,10 @@ class XDroneGenerator extends AbstractGenerator {
 		var http    = require('http');
 		var fs		= require('fs');
 		
-		var client  = arDrone.createClient();
-		
-		console.log('Connecting png stream ...');
-		var pngStream = arDrone.createClient().getPngStream();
+		var option = new Object();
+		option.imageSize = "1280x720";
+		var client = arDrone.createClient(option);
+		var pngStream = client.getPngStream();
 		
 		client.takeoff();
 		

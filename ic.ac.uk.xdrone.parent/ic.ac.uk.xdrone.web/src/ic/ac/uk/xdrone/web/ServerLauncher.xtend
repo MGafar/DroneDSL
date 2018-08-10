@@ -31,7 +31,7 @@ class ServerLauncher {
 		
 		val ni = NetworkInterface.getByName("wlan0");
 		
-//		val ni = NetworkInterface.getByName("wlp3s0");
+//s		val ni = NetworkInterface.getByName("wlp3s0");
 		
 		try{
 			ni.getInetAddresses();
